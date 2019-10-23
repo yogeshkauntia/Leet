@@ -1,37 +1,37 @@
+import numpy as np
+
+
 def isValidSudoku(board):
-  '''
-  Given an initial sudoku board with numbers as list of lists, find if it is valid or not
-  Each internal list is one row of sudoku
-  '''
+    '''
+    Given an initial sudoku board with numbers as list of lists, find if it is valid or not
+    Each internal list is one row of sudoku
+    '''
+    board = np.array(board)
 
-  def _listCheck(numList):
-    seen = set()
-    for x in numList:
-      if x in seen and x != ".": return False
-      seen.add(x)
+    def _listCheck(numList):
+        seen = set()
+        for x in numList:
+            if x in seen and x != ".":
+                return False
+            seen.add(x)
+        return True
+
+    for i in range(board.shape[0]):
+        if _listCheck(board[i].tolist()) == False:
+            return False
+            break
+
+    for i in range(board.shape[0]):
+        if _listCheck(board[:, i].tolist()) == False:
+            print("col fail", i)
+            return False
+            break
+
+    for i in range(3):
+        for j in range(3):
+            if _listCheck(board[i*3:i*3+3, j*3:j*3+3].flatten().tolist()) == False:
+                print("grid fail")
+                return False
+                break
+
     return True
-
-  for row in board:
-    if _listCheck(row)==False:
-      return False
-      break
-
-  for colIndex in range(9):
-    col = []
-    for rowIndex in range(9):
-      col.append(board[rowIndex][colIndex])
-    if _listCheck(col)==False:
-      return False
-      break
-
-  for rowSet in range(3):
-    board_sub = board[rowSet*3:(rowSet+1)*3]
-    for index in range(3):
-      grid = [board_sub[0][index*3], board_sub[0][index*3+1], board_sub[0][index*3+2],
-              board_sub[1][index*3], board_sub[1][index*3+1], board_sub[1][index*3+2],
-              board_sub[2][index*3], board_sub[2][index*3+1], board_sub[2][index*3+2]]
-      if _listCheck(grid)==False:
-        return False
-        break
-
-  return True
